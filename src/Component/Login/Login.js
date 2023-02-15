@@ -1,0 +1,125 @@
+import { useState, useRef,useContext } from "react";
+import AuthContext from "../Context/Auth-Context/Auth-Context";
+import classes from "./Login.module.css";
+
+const LogIn = () => {
+  const emailItnputRef = useRef();
+  const passwordInputRef = useRef();
+  const confirmpassword=useRef();
+  
+  const ctx=useContext(AuthContext)
+
+  const [isLogin, setIsLogin] = useState(false);
+
+  const [isLoading,setIsLoading]=useState(false);
+
+
+  const switchAuthModeHandler = () => {
+    setIsLogin((prevState) => !prevState);
+  };
+
+  const submitHandler = (e) => {
+    e.preventDefault();
+
+    let enteredemail = emailItnputRef.current.value;
+    let enteredpassword = passwordInputRef.current.value;
+
+    let Confirmpassword =  confirmpassword.current.value 
+   
+    
+
+    if(enteredpassword!==Confirmpassword){
+     alert("password are not same");
+     return;
+    }
+
+    setIsLoading(true);
+    let url;
+    if (isLogin) {
+        url='https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyD5Ls-KCDVH0n1SoRjuqDNCBEmY10N3zaY'
+    } else {
+        url='https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyD5Ls-KCDVH0n1SoRjuqDNCBEmY10N3zaY'
+    }
+
+      fetch(
+        url,
+        {
+          method: "POST",
+          body: JSON.stringify({
+            email: enteredemail,
+            password: enteredpassword,
+            returnSecureToken: true,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      ).then((res) => {
+        setIsLoading(false);
+        if (res.ok) {
+          emailItnputRef.current.value="";
+          passwordInputRef.current.value="";
+          confirmpassword.current.value="";
+          console.log("User has successfully signed up.")
+          return res.json();
+        } else {
+          return res.json().then((data) => {
+           let errmessage ="Authentication Failed";
+           if(data && data.error && data.error.message){
+            errmessage= data.error.message; 
+           }
+           throw new Error(errmessage);
+          });
+        }
+      }).then(data=>{
+         ctx.Login(data.idToken);
+         localStorage.setItem("tokenid",data.idToken)
+         localStorage.setItem("emailid",data.email)
+      }).catch(err=>{
+        alert(err.message);
+      })
+     
+};
+
+  return (
+    <section className={classes.auth}>
+      <h1>{isLogin ? "Login" : "Sign Up"}</h1>
+      <form onSubmit={submitHandler}>
+        <div className={classes.control}>
+          <input type="email" id="email" required ref={emailItnputRef} placeholder="Email"/>
+        </div>
+        <div className={classes.control}>
+          <input
+            type="password"
+            id="password"
+            required
+            ref={passwordInputRef}
+            placeholder="Password"
+          />
+        </div>
+      <div className={classes.control}>
+          <input
+            type="password"
+            id="confirm-password"
+            required
+            ref={confirmpassword}
+            placeholder="Confirm Password"
+          />
+        </div>
+        <div className={classes.actions}>
+         {!isLoading && <button>{isLogin ? "Login" : "Sign Up"}</button>}
+         {isLoading && <p>Sending Request....</p>} 
+          <button
+            type="button"
+            className={classes.toggle}
+            onClick={switchAuthModeHandler}
+          >
+            {isLogin ? "Create new account" : "Have an account?LogIn"}
+          </button>
+        </div>
+      </form>
+    </section>
+  );
+};
+
+export default LogIn;

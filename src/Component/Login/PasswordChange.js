@@ -1,4 +1,3 @@
-import { useHistory } from "react-router-dom";
 import React, { useRef, useContext } from "react";
 import classes from "./Password.module.css";
 import AuthContext from "../Context/Auth-Context/Auth-Context";
@@ -8,15 +7,14 @@ const Passwordchanger = () => {
 
   const ctx = useContext(AuthContext);
 
-  const history = useHistory();
-
+ 
   const submitHandler = (e) => {
     e.preventDefault();
 
     const enterednewpassword = passwordref.current.value;
 
     fetch(
-      "https://identitytoolkit.googleapis.com/v1/accounts:update?key=AIzaSyCtAB2ySpP41rMWn_UdbtdGgUXfepvS18I",
+      "https://identitytoolkit.googleapis.com/v1/accounts:update?key=AIzaSyD5Ls-KCDVH0n1SoRjuqDNCBEmY10N3zaY",
       {
         method: "POST",
         body: JSON.stringify({
@@ -29,9 +27,9 @@ const Passwordchanger = () => {
         },
       }
     ).then((res) => {
-      history.replace("/");
       localStorage.removeItem("tokenid");
       localStorage.removeItem("emailid");
+      alert("password changed successfully")
       ctx.Logout();
     });
   };

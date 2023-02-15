@@ -1,14 +1,16 @@
-import { useState, useRef, useContext } from "react";
+import React, { useState, useRef, useContext } from "react";
 import AuthContext from "../Context/Auth-Context/Auth-Context";
 import classes from "./Login.module.css";
+import Passwordchanger from "./PasswordChange";
 
-const LogIn = () => {
+const LogIn = (props) => {
   const emailItnputRef = useRef();
   const passwordInputRef = useRef();
   const confirmpassword=useRef();
 
   const ctx = useContext(AuthContext);
-
+  
+  const [changepassworddisplay,setchangepass]=useState(false);
   
   const [isLogin, setIsLogin] = useState(false);
 
@@ -17,6 +19,15 @@ const LogIn = () => {
   const switchAuthModeHandler = () => {
     setIsLogin((prevState) => !prevState);
   };
+
+  const passwordchanger=()=>{
+    setchangepass(true);
+  }
+
+  const cancellinghandler=()=>{
+    setchangepass(false);
+  }
+
 
   const submitHandler = (e) => {
 
@@ -90,7 +101,7 @@ const LogIn = () => {
 
   return (
     <section className={classes.auth}>
-      <h1>{isLogin ? "Login" : "Sign Up"}</h1>
+     {!changepassworddisplay && <> <h1>{isLogin ? "Login" : "Sign Up"}</h1>
       <form onSubmit={submitHandler}>
         <div className={classes.control}>
           <input
@@ -125,7 +136,7 @@ const LogIn = () => {
         <div className={classes.actions}>
           {!isLoading && <button>{isLogin ? "Login" : "Sign Up"}</button>}
           {isLoading && <p>Sending Request....</p>}
-          {isLogin &&<a href="true">forgot Password</a>}
+          {isLogin &&<span className="btn btn-link" onClick={passwordchanger}>forgot Password</span>}
           <button
             type="button"
             className={classes.toggle}
@@ -137,6 +148,9 @@ const LogIn = () => {
           </button>
         </div>
       </form>
+      </>
+      }
+     {changepassworddisplay && <Passwordchanger oncanceling={cancellinghandler}/>} 
     </section>
   );
 };

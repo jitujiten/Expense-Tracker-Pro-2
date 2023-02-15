@@ -1,0 +1,7 @@
+.profile_div{
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  border-radius: 5px;
+  padding: 2px;
+}

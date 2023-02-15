@@ -2,7 +2,7 @@ import React, { useRef, useContext } from "react";
 import classes from "./Password.module.css";
 import AuthContext from "../Context/Auth-Context/Auth-Context";
 
-const Passwordchanger = () => {
+const Passwordchanger = (props) => {
   const passwordref = useRef();
 
   const ctx = useContext(AuthContext);
@@ -30,11 +30,12 @@ const Passwordchanger = () => {
       localStorage.removeItem("tokenid");
       localStorage.removeItem("emailid");
       alert("password changed successfully")
-      ctx.Logout();
+      props.oncanceling()
     });
   };
 
-  return (
+  return (<>
+    <button type="button" className="btn-close"  aria-label="Close" onClick={props.oncanceling}/>
     <form className={classes.form} onSubmit={submitHandler}>
       <div className={classes.control}>
         <label htmlFor="new-password">New Password</label>
@@ -49,6 +50,7 @@ const Passwordchanger = () => {
         <button>Change Password</button>
       </div>
     </form>
+    </>
   );
 };
 

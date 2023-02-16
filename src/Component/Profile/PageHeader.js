@@ -40,7 +40,7 @@ function PageHeader() {
       .catch((err) => {
         alert(err.message);
       });
-  }, []);
+  }, [authCtx]);
   return (
      <React.Fragment  >
       <header  className={classes.pageheader}> <div >Welcome to Expense Tracker !!!</div> <span>Your profile incomplete.<NavLink 

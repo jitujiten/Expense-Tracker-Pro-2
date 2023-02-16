@@ -5,11 +5,14 @@ import ExpensePage from "./Component/Profile/ExpensePage";
 import AuthContext from "./Component/Context/AuthContext";
 import ProfilForm from "./Component/Profile/ProfileForm";
 import Logout from "./Component/Profile/Logout";
-
+import PasswordChange from "./Component/Context/PasswordChanger";
 function App() {
   const authCtx = useContext(AuthContext);
   return (
     <React.Fragment>
+      <Route path="*">
+        <Redirect to="/Authpage" />
+      </Route>
       {authCtx.isLoggedIn && <Logout />}
       <Switch>
         {authCtx.isLoggedIn && (
@@ -27,8 +30,9 @@ function App() {
             <AuthForm />
           </Route>
         )}
-        <Route path="*">
-          <Redirect to="/Authpage" />
+
+        <Route path="/ChangePassword">
+          <PasswordChange />
         </Route>
       </Switch>
     </React.Fragment>

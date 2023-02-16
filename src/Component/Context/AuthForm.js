@@ -1,11 +1,11 @@
-import React, { useState, useRef,useContext } from "react";
-import { useHistory } from "react-router-dom";
+import React, { useState, useRef, useContext } from "react";
+import { useHistory, NavLink } from "react-router-dom";
 import classes from "./AuthForm.module.css";
 import AuthContext from "./AuthContext";
 
 function AuthForm() {
-    const history = useHistory()
-  const authCtx = useContext(AuthContext)
+  const history = useHistory();
+  const authCtx = useContext(AuthContext);
   const [isLogin, setIsLogin] = useState(true);
   const [password, setPassword] = useState("");
   const [confirmPassword, setconfirmPassword] = useState("");
@@ -85,8 +85,8 @@ function AuthForm() {
         })
         .then((data) => {
           console.log(data);
-          authCtx.login(data.idToken)
-          history.replace('/ExpensePage')
+          authCtx.login(data.idToken);
+          history.replace("/ExpensePage");
         })
         .catch((err) => {
           alert(err.message);
@@ -96,67 +96,86 @@ function AuthForm() {
 
   return (
     <div className="row">
-    <div className="col-4"></div>
-    <div className="col-6">
-    <section>
-      <div className={classes.auth}>
-        <h1>{isLogin ? "Login" : "Sign Up"}</h1>
-        <form onSubmit={submitHandler}>
-          <div>
-            <div>
-              {" "}
-              <label htmlFor="email">Email</label>
-            </div>
-            <div>
-              <input type="email" ref={emailInputRef} required autoComplete="email"></input>
-            </div>
-          </div>
-          <div>
-            <div>
-              <label htmlFor="password">Password</label>
-            </div>
-            <div>
-              <input
-                type="password"
-                onChange={handlePasswordchange}
-                value={password}
-                ref={passwordInputRef}
-                required
-              ></input>
-            </div>
-          </div>
-          {!isLogin && (
-            <div>
+      <div className="col-4"></div>
+      <div className="col-6">
+        <section>
+          <div className={classes.auth}>
+            <h1>{isLogin ? "Login" : "Sign Up"}</h1>
+            <form onSubmit={submitHandler}>
               <div>
-                {" "}
-                <label htmlFor="confirm password">Confirm Password</label>
+                <div>
+                  {" "}
+                  <label htmlFor="email">Email</label>
+                </div>
+                <div>
+                  <input
+                    type="email"
+                    ref={emailInputRef}
+                    required
+                    autoComplete="email"
+                  ></input>
+                </div>
               </div>
               <div>
-                <input
-                  type="password"
-                  onChange={hadleConfirmPasswordChange}
-                  value={confirmPassword}
-                  ref={passwordInputRef}
-                  required
-                ></input>
-                {isValid ? null : (
-                  <p style={{ color: "red" }}> ! password do not match...</p>
-                )}
+                <div>
+                  <label htmlFor="password">Password</label>
+                </div>
+                <div>
+                  <input
+                    type="password"
+                    onChange={handlePasswordchange}
+                    value={password}
+                    ref={passwordInputRef}
+                    required
+                  ></input>
+                </div>
               </div>
-            </div>
-          )}
-          <div>
-            <button>{isLogin ? "Login" : "Sing up"}</button>
+              {!isLogin && (
+                <div>
+                  <div>
+                    {" "}
+                    <label htmlFor="confirm password">Confirm Password</label>
+                  </div>
+                  <div>
+                    <input
+                      type="password"
+                      onChange={hadleConfirmPasswordChange}
+                      value={confirmPassword}
+                      ref={passwordInputRef}
+                      required
+                    ></input>
+                    {isValid ? null : (
+                      <p style={{ color: "red" }}>
+                        {" "}
+                        ! password do not match...
+                      </p>
+                    )}
+                  </div>
+                </div>
+              )}
+              <div>
+                <button>{isLogin ? "Login" : "Sing up"}</button>
+                <div>
+                  <button type="button" onClick={switchAuthModelHandler}>
+                    {isLogin ? "Create new account" : "Have an account ? Login"}
+                  </button>
+                </div>
+              </div>
+            </form>
             <div>
-              <button type="button" onClick={switchAuthModelHandler}>
-                {isLogin ? "Create new account" : "Have an account ? Login"}
-              </button>
+              {isLogin && (
+                <NavLink
+                  style={{textDecoration: "none", color: "red" }}
+                  to="/ChangePassword"
+                >
+                  {" "}
+                  Forgot password?{" "}
+                </NavLink>
+              )}
             </div>
           </div>
-        </form>
+        </section>
       </div>
-    </section>
-    </div>
     </div>
   );
 }

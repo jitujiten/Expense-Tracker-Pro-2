@@ -1,0 +1,13 @@
+.expensepage{
+   font-size: large; 
+}
+.but{
+   background-color: rgb(196, 13, 181); 
+   color: white;
+   padding: 0.8%;
+   border-radius: 5px;
+}
+
+.but:hover{
+    background-color: rgb(246, 5, 226); 
+ }

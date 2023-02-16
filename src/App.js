@@ -1,28 +1,36 @@
 import React, { useContext } from "react";
 import AuthForm from "./Component/Context/AuthForm";
-import { Route, Switch } from "react-router-dom";
+import { Route, Switch, Redirect } from "react-router-dom";
 import ExpensePage from "./Component/Profile/ExpensePage";
 import AuthContext from "./Component/Context/AuthContext";
 import ProfilForm from "./Component/Profile/ProfileForm";
+import Logout from "./Component/Profile/Logout";
 
 function App() {
   const authCtx = useContext(AuthContext);
-
   return (
     <React.Fragment>
-    <div className="container-fluid">
+      {authCtx.isLoggedIn && <Logout />}
       <Switch>
         {authCtx.isLoggedIn && (
           <Route path="/ExpensePage" exact>
             <ExpensePage />
           </Route>
         )}
-        <Route path="/ExpensePage:ProfilePage">
-          <ProfilForm />
+        {authCtx.isLoggedIn && (
+          <Route path="/ExpensePage:ProfilePage">
+            <ProfilForm />
+          </Route>
+        )}
+        {!authCtx.isLoggedIn && (
+          <Route path="/Authpage">
+            <AuthForm />
+          </Route>
+        )}
+        <Route path="*">
+          <Redirect to="/Authpage" />
         </Route>
       </Switch>
-      </div>
-      {!authCtx.isLoggedIn && <AuthForm />}
     </React.Fragment>
   );
 }

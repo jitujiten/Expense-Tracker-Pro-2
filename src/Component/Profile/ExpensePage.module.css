@@ -4,8 +4,10 @@
 .but{
    background-color: rgb(196, 13, 181); 
    color: white;
-   padding: 0.8%;
+   padding: 0.2%;
    border-radius: 5px;
+   margin-left: 1%;
+   margin-top: 0.8%;
 }
 
 .but:hover{

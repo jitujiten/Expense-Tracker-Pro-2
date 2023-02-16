@@ -50,8 +50,9 @@ function ProfilForm() {
       });
   };
 
-  // console.log(authCtx.profile.users[0].displayName, "profileform data");
-  const getdata = authCtx.profile.users[0];
+ 
+  const getdata = JSON.parse(localStorage.getItem('data'))    
+
   return (
     <React.Fragment>
       <header className={classes.pageheader}>
@@ -85,7 +86,7 @@ function ProfilForm() {
               <input
                 type="text"
                 ref={nameRef}
-                defaultValue={getdata.displayName}
+                defaultValue={getdata.users[0].displayName}
               ></input>
             </div>
             <div>
@@ -97,7 +98,7 @@ function ProfilForm() {
               <input
                 type="text"
                 ref={photourlRef}
-                defaultValue={getdata.photoUrl}
+                defaultValue={getdata.users[0].photoUrl}
               ></input>
             </div>
           </div>

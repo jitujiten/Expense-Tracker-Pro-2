@@ -1,0 +1,14 @@
+.pageheader   {
+    justify-content: space-between;
+    display:flex;
+    text-decoration:none;
+    padding:10px;
+    
+}
+.pageheader span {
+    background-color: lightgrey;
+    border-radius: 20px;
+    padding:6px;
+     
+}
+ 

@@ -1,14 +1,10 @@
-import ReactDOM from "react-dom/client";
-import { AuthContextProvider } from "./Component/Context/Auth-Context/Auth-Context";
-import "./index.css";
-import App from "./App";
-import { BrowserRouter } from "react-router-dom";
+import React from 'react';
+import { BrowserRouter } from 'react-router-dom';
+import ReactDOM from 'react-dom/client';
+import AuthProvider from './Component/Context/AuthProvider';
 
-const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(
-  <AuthContextProvider>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
-  </AuthContextProvider>
-);
+import './index.css';
+import App from './App';
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<BrowserRouter><AuthProvider><App /></AuthProvider></BrowserRouter>);

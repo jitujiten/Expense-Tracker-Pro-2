@@ -1,39 +1,29 @@
-import { Fragment, useContext } from "react";
-import LogIn from "./Component/Login/Login";
-import AuthContext from "./Component/Context/Auth-Context/Auth-Context";
-import { Route, Switch,Redirect } from "react-router-dom";
-import Profile from "./Component/Profile/Profile";
-
-
-
+import React, { useContext } from "react";
+import AuthForm from "./Component/Context/AuthForm";
+import { Route, Switch } from "react-router-dom";
+import ExpensePage from "./Component/Profile/ExpensePage";
+import AuthContext from "./Component/Context/AuthContext";
+import ProfilForm from "./Component/Profile/ProfileForm";
 
 function App() {
-  const ctx = useContext(AuthContext);
-
-  const isLoggedIn = ctx.isLoggedIn || localStorage.getItem("tokenid");
+  const authCtx = useContext(AuthContext);
 
   return (
-    <Fragment>
-      {!isLoggedIn && (
-        <Route path="/">
-          <LogIn />
+    <React.Fragment>
+    <div className="container-fluid">
+      <Switch>
+        {authCtx.isLoggedIn && (
+          <Route path="/ExpensePage" exact>
+            <ExpensePage />
+          </Route>
+        )}
+        <Route path="/ExpensePage:ProfilePage">
+          <ProfilForm />
         </Route>
-      )}
-      {isLoggedIn && (
-        <div className="container-fluid">
-        <Switch>
-         <Route path="/" exact>
-            <Redirect to="/profile"/>
-          </Route>
-
-          <Route path="/profile">
-            <Profile />
-          </Route>
-        </Switch>
-        </div>
-      )}
-    </Fragment>
-    
+      </Switch>
+      </div>
+      {!authCtx.isLoggedIn && <AuthForm />}
+    </React.Fragment>
   );
 }
 

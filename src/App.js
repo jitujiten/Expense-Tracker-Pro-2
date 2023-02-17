@@ -10,11 +10,15 @@ function App() {
   const authCtx = useContext(AuthContext);
   return (
     <React.Fragment>
-      <Route path="*">
-        <Redirect to="/Authpage" />
-      </Route>
+      {" "}
+      {!authCtx.isLoggedIn && (
+        <Route path="*">
+          <Redirect to="/Authpage" />
+        </Route>
+      )}{" "}
       {authCtx.isLoggedIn && <Logout />}
       <Switch>
+        {" "}
         {authCtx.isLoggedIn && (
           <Route path="/ExpensePage" exact>
             <ExpensePage />
@@ -30,7 +34,6 @@ function App() {
             <AuthForm />
           </Route>
         )}
-
         <Route path="/ChangePassword">
           <PasswordChange />
         </Route>
@@ -38,5 +41,4 @@ function App() {
     </React.Fragment>
   );
 }
-
 export default App;

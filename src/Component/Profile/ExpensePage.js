@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState,useEffect } from "react";
 import PageHeader from "./PageHeader";
 import classes from "./ExpensePage.module.css";
 import AuthContext from "../Context/AuthContext";
@@ -10,7 +10,54 @@ function ExpensePage() {
 
   const [printexpense, setPrintExpense] = useState([]);
 
+  const [getdat, setGetdata] = useState([]);
+
+  useEffect(()=>{
+    async function fetchExpenses(){
+      try{
+        const res = await fetch('https://expense-tracker-58883-default-rtdb.firebaseio.com/Expense.json',{
+          method:"GET",
+          headers:{
+            "Content-Type": "application/json"
+          },
+        })
+        const data = await res.json();
+        if(res.ok){
+          const newdata = [];
+          for(let key in data){
+            newdata.push({id:key,...data[key]});
+          }
+          setGetdata(newdata)
+          setPrintExpense(newdata)
+        }else{
+          throw data.error
+        }
+      }catch(error){
+        console.log(error.message)
+      }
+    }
+    fetchExpenses()
+  
+  },[])
+  
+  console.log(getdat,'from expensepage useeffect get data')
   const inputvalueHandler = (expense) => {
+    fetch("https://expense-tracker-58883-default-rtdb.firebaseio.com/Expense.json", {
+      method: "POST",
+      body: JSON.stringify(expense),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => {
+        console.log(res, "form post data");
+        return res.json();
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+
+
     setPrintExpense((prevexpense) => {
       return [expense, ...prevexpense];
     });
@@ -55,7 +102,7 @@ function ExpensePage() {
       });
   };
 
-  // console.log(printexpense, "from expnesepage");
+   console.log(printexpense, "from expnesepage");
 
   return (
     <React.Fragment>

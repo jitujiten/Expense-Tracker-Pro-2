@@ -35,6 +35,7 @@
   border: 0.5px solid rgb(74, 13, 243);
   margin: 5px;
   border-radius: 4px;
+  width: 70%;
 }
 .expensefrom select {
   margin: 5px;

@@ -9,7 +9,7 @@ const ExpenseInput = (props) => {
       <div className={classes.expenseInput}>
         <ul>
           {props.printexpense.map((item) => (
-            <li key={Math.random()}>
+            <li key={Math.random().toString()}>
               <label>Expense Amount</label>
               <span className={classes.data}>{item.enteredExpense} </span>
               <label>Details</label>

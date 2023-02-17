@@ -40,7 +40,7 @@ function PasswordChange() {
       .then((data) => {
         emailRef.current.value = "";
         console.log(data);
-        console.log("success");
+       console.log("success");
       })
       .catch((err) => {
         alert(err.message);

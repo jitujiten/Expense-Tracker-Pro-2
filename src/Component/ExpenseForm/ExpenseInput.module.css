@@ -1,0 +1,30 @@
+.expenseInput {
+    background-color: rgb(11, 243, 247);
+    border-radius:20px ;
+    color: rgb(3, 3, 3);
+    padding: 3%;
+    margin-left: 15%;
+    width:70%;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-weight: 900;
+    box-shadow: 2px 2px 10px black;
+}
+.expenseInput ul {
+  list-style-type: none;
+  margin-left:3%;
+}
+.expenseInput button {
+  background-color: brown;
+  color: white;
+  border-radius: 4px;
+  border: 0.5px solid white;
+  padding: 4px;
+}
+
+.data {
+  margin: 4%;
+  text-decoration: none;
+  padding: 5px;
+  border: 1px solid white;
+  border-radius: 4px;
+}

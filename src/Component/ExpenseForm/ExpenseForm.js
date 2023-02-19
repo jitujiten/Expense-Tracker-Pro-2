@@ -1,44 +1,50 @@
-import React, {
-  useCallback,
-  useRef,
-  useEffect,
-  useState,
-} from "react";
+import React, { useEffect, useState } from "react";
 import classes from "./ExpenseForm.module.css";
 import ExpenseInput from "./ExpenseInput";
+import { themeAction } from "../Store/AuthRedux";
+import { useSelector, useDispatch } from "react-redux";
+import { CSVLink } from "react-csv";
+import { addingExpenses,EditingExpenses} from "../Store/expense-actions";
 
+
+let id = "";
+let totalAmount =0
 
 
 const ExpenseForm = (props) => {
+  const showExpense = useSelector((state) => state.expenseitem.expense);
+ 
+  const activePremium = useSelector((state) => state.theme.cvandDark);
+  const dispatch = useDispatch();
+
   const [enteredExpense, setEnteredExpense] = useState("");
   const [enteredDetails, setEnteredDetails] = useState("");
   const [enteredCategory, setEnteredCategory] = useState("");
-  const [printexpense, setPrintExpense] = useState([]);
-  const amountRef = useRef();
-  const DetailRef = useRef();
-  const CategoryRef = useRef();
+  const [itemToBeEdit, setItemToBeEdit] = useState(false);
+  const [premium, setPrmium] = useState(false);
 
-  const EditExpenseHandler = (item) => {
-    amountRef.current.value = item.enteredExpense;
-    DetailRef.current.value = item.enteredDetails;
-    CategoryRef.current.value = item.enteredCategory;
-    const updatedExpense = printexpense.filter((expense) => {
-      return expense.id !== item.id;
-    });
-    setPrintExpense(updatedExpense);
+  const activePremiumHandler = () => {
+    dispatch(themeAction.cvDarkMode(true));
+    setPrmium(true)
   };
-  console.log(printexpense, "from expnesepage");
+  const headers = [
+    { label: "Expense Amount", key: "enteredExpense" },
+    { label: "Details", key: "enteredDetails" },
+    { label: "Category", key: "enteredCategory" },
+  ];
 
-  ///////******************* */
-
-  const removeItemHanler = (data) => {
-    let removeitem = printexpense.findIndex((item) => item.id === data.id);
-    const arr = [...printexpense];
-    const updateItems = arr.splice(removeitem, 1);
-    console.log(updateItems);
-    setPrintExpense(arr);
+  const csvLink = {
+    filename: "file.csv",
+    headers: headers,
+    data: showExpense,
   };
-//////////////////////////////////********* */
+  const EditExpenseHandler = (data) => {
+    setEnteredExpense(data.enteredExpense);
+    setEnteredDetails(data.enteredDetails);
+    setEnteredCategory(data.enteredCategory);
+    setItemToBeEdit(true);
+    id = data.id;
+  };
 
   const expenseHandler = (event) => {
     setEnteredExpense(event.target.value);
@@ -49,130 +55,127 @@ const ExpenseForm = (props) => {
   const categoryHandler = (event) => {
     setEnteredCategory(event.target.value);
   };
-  
-const SubmitHandler = (event) => {
+
+  const SubmitHandler = (event) => {
     event.preventDefault();
 
-if(enteredExpense===""||enteredDetails===""){
-    return;
-}
+    if (itemToBeEdit) {
+      const obj = {
+        enteredExpense,
+        enteredDetails,
+        enteredCategory,
+      };
+      console.log(id);
+      dispatch(EditingExpenses(id, obj));
+      setEnteredExpense("");
+      setEnteredDetails("");
+      setEnteredCategory("");
+    } else {
+      const obj = {
+        enteredExpense,
+        enteredDetails,
+        enteredCategory,
+      };
+      dispatch(addingExpenses(obj));
+    }
+    setEnteredExpense("");
+    setEnteredDetails("");
+    setEnteredCategory("");
+  };
 
+  totalAmount = showExpense?.reduce(
+    (prvamount, item) => (prvamount += Number(item.enteredExpense)),
+    0
+  );
 
-    const obj = {
-      enteredExpense,
-      enteredDetails,
-      enteredCategory,
-      __id: Math.random().toString(),
-    };
-    fetch("https://expense-tracker-58883-default-rtdb.firebaseio.com/Expense.json", {
-        method: "POST",
-        body: JSON.stringify(obj),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-        .then((res) => {
-          console.log(res, "form post data");
-          return res.json();
-        })
-        .catch((err) => {
-          console.log(err.message);
-        });
-      setPrintExpense((prevexpense) => {
-        return [obj, ...prevexpense];
-      });
-    };
-    const fetchExpenses = useCallback(async () => {
-      try {
-        const res = await fetch(
-          "https://expense-tracker-58883-default-rtdb.firebaseio.com/Expense.json",
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        const data = await res.json();
-        if (res.ok) {
-          const newdata = [];
-          for (let key in data) {
-            newdata.push({ id: key, ...data[key] });
-          }
-  
-          setPrintExpense(newdata);
-        } else {
-          throw data.error;
-        }
-      } catch (error) {
-        console.log(error.message);
-      }
-    },[]);
-  
-    useEffect(() => {
-      fetchExpenses();
-    },[fetchExpenses]);
- 
+ useEffect(() => {
+  if (totalAmount >= 10000) {
+    setPrmium(true);
+  }else {
+    setPrmium(false)
+  }
+ },[totalAmount]) 
 
   return (
     <div className="row">
       <div className="col-2"></div>
       <div className="col-6">
-       <div>
-        <div className={classes.expensefrom}>
-          <h1>EXPENSE TRACKER</h1>
-          <form onSubmit={SubmitHandler}>
-            <div className={classes.input}>
-              <div>
-                {" "}
-                <label htmlFor="Expense Amount">Expense Amount</label>
-              </div>{" "}
-              <div>
-                <input
-                  type="text"
-                  value={enteredExpense}
-                  onChange={expenseHandler}
-                  required
-                ></input>
-              </div>
-              <div>
-                {" "}
-                <label htmlFor="Details">Details</label>
-              </div>{" "}
-              <div>
-                <input
-                  type="text"
-                  value={enteredDetails}
-                  onChange={detailsHandler}
-                  required
-                ></input>
-              </div>
-              <div>
-                <label htmlFor="category">Category</label>
-                <select onChange={categoryHandler} value={enteredCategory}>
-                  <option>Food</option>
-                  <option>Petrol</option>
-                  <option>Salary</option>
-                  <option>Travlling</option>
-                  <option>Study</option>
-                  <option>House_Keeping</option>
-                </select>
-              </div>
-              <div>
-                <button>Submit</button>
-              </div>
+        <div>
+          {premium && (
+            <div  className={classes.premium}>
+              <button className={classes.buttons} onClick={activePremiumHandler}>Active Premium</button>
             </div>
-          </form>
+          )}
+
+          <div className={classes.expensefrom}>
+            <h1>EXPENSE TRACKER</h1>
+            <form onSubmit={SubmitHandler}>
+              <div className={classes.input}>
+                <div>
+                  {" "}
+                  <label htmlFor="Expense Amount">Expense Amount</label>
+                </div>{" "}
+                <div>
+                  <input
+                    type="number"
+                    value={enteredExpense}
+                    onChange={expenseHandler}
+                    id="enteredExpense"
+                  ></input>
+                </div>
+                <div>
+                  {" "}
+                  <label htmlFor="Details">Details</label>
+                </div>{" "}
+                <div>
+                  <input
+                    type="text"
+                    value={enteredDetails}
+                    id="enteredDetails"
+                    onChange={detailsHandler}
+                  ></input>
+                </div>
+                <div>
+                  <label htmlFor="category">Category</label>
+                  <select
+                    onChange={categoryHandler}
+                    value={enteredCategory}
+                    id="enteredCategory"
+                    required
+                  >
+                    <option>select one</option>
+                    <option>Food</option>
+                    <option>Petrol</option>
+                    <option>Salary</option>
+                    <option>Travlling</option>
+                    <option>Study</option>
+                    <option>House Keeping</option>
+                  </select>
+                </div>
+                <div>
+                  <button>Submit</button>
+                </div>
+              </div>
+            </form>
           </div>
-          {printexpense.map((item) => (
-        <ExpenseInput
-          key={item.__id}
-          id={item.id}
-          item={item}
-          onRemove={removeItemHanler}
-          onEdit={EditExpenseHandler}
-        />
-      ))}
+          {showExpense.map((item) => (
+            <ExpenseInput
+              key={item.id}
+              id={item.id}
+              item={item}
+              EditExpenseHandler={EditExpenseHandler}
+            />
+          ))}
+          <div>
+            <h1 className={classes.head}>Total Amount = {totalAmount}</h1>
+          </div>
+          {premium && activePremium && (
+            <div className={classes.csv}>
+              <CSVLink {...csvLink}>
+                <button>Download CSV</button>
+              </CSVLink>
+            </div>
+          )}
         </div>
       </div>
     </div>

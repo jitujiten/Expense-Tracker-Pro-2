@@ -1,0 +1,26 @@
+
+#light {
+    background-color: #f9f6f9;
+  }
+
+  #dark {
+    background-color: #410a5c;
+  }
+.switch {
+    display: flex;
+    width: 100vw;
+    height: 30px;
+    justify-content: center;
+    align-items: center;
+  }
+  .switch label {
+    margin: 10px;
+  }
+  #light .switch label {
+    color: black;
+    font-weight: 400;
+  }
+
+  #dark .switch label {
+    color: white;
+  }

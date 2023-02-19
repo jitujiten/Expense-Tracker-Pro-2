@@ -1,13 +1,23 @@
-import React, { useRef, useContext } from "react";
+import React, { useRef} from "react";
 import classes from "./PageHeader.module.css";
 import classes1 from "./ProfileForm.module.css";
 import { NavLink } from "react-router-dom";
-import AuthContext from "../Context/AuthContext";
+import { useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
+
 
 function ProfilForm() {
-  const authCtx = useContext(AuthContext);
+ 
+  const  idtoken = useSelector((state)=>state.auth.token)
   const nameRef = useRef();
   const photourlRef = useRef();
+
+  const history=useHistory();
+  const cancelinghandler=()=>{
+    history.goBack();
+  }
+
+
 
   const submitHandler = (event) => {
     event.preventDefault();
@@ -18,7 +28,7 @@ function ProfilForm() {
       {
         method: "POST",
         body: JSON.stringify({
-          idToken: authCtx.tokenid,
+          idToken: idtoken,
           displayName: enteredName,
           photoUrl: enteredUrl,
 
@@ -54,7 +64,9 @@ function ProfilForm() {
   const getdata = JSON.parse(localStorage.getItem('data'))    
 
   return (
-    <React.Fragment>
+   
+    <div className="row">
+    <div className="col-12">
       <header className={classes.pageheader}>
         {" "}
         <div>Winners never quite, Quitters never win.</div>{" "}
@@ -70,13 +82,13 @@ function ProfilForm() {
         </span>{" "}
       </header>
       <hr />
+      <div className="row">
+      <div className="col-md-8">
       <form onSubmit={submitHandler}>
         <div className={classes1.profile}>
           <div className={classes1.contact}>
             <h2>Contact Details </h2>
-            <span>
-              <button>Cancel</button>
-            </span>
+              <button onClick={cancelinghandler}>Cancel</button>
           </div>
           <div className={classes1.form}>
             <div>
@@ -108,7 +120,10 @@ function ProfilForm() {
           <hr />
         </div>
       </form>
-    </React.Fragment>
+      </div>
+      </div>
+      </div>
+      </div>
   );
 }
 

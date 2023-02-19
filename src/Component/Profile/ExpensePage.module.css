@@ -1,6 +1,10 @@
 .expensepage{
    font-size: large; 
+   font-weight: 800;
+   text-shadow: 1px 1px 15px rgb(255, 255, 255);
+   color: black;
 }
+
 .but{
    background-color: rgb(196, 13, 181); 
    color: white;

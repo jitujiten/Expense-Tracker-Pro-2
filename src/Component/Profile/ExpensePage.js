@@ -1,12 +1,13 @@
-import React, { useContext} from "react";
+import React from "react";
 import PageHeader from "./PageHeader";
 import classes from "./ExpensePage.module.css";
-import AuthContext from "../Context/AuthContext";
 import ExpenseForm from "../ExpenseForm/ExpenseForm";
+import { useSelector } from "react-redux";
+
 
 function ExpensePage() {
-  const authCtx = useContext(AuthContext);
 
+  const idtoken = useSelector((state)=>state.auth.token)
   const submitHandler = (event) => {
     event.preventDefault();
 
@@ -16,7 +17,7 @@ function ExpensePage() {
         method: "POST",
         body: JSON.stringify({
           requestType: "VERIFY_EMAIL",
-          idToken: authCtx.tokenid,
+          idToken: idtoken,
         }),
         headers: {
           "Content-Type": "application/json",
@@ -56,7 +57,7 @@ function ExpensePage() {
         <div className={classes.expensepage}>
           {" "}
           <label htmlFor="emailverification">Please Verify Your Email..</label>
-          <button>Email Verificatin</button>
+          <button className={classes.but}>Email Verificatin</button>
         </div>
       </form>
       <ExpenseForm></ExpenseForm>

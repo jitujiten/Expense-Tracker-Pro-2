@@ -1,11 +1,13 @@
-import React, { useState, useRef, useContext } from "react";
+import React, { useState, useRef } from "react";
 import { useHistory, NavLink } from "react-router-dom";
 import classes from "./AuthForm.module.css";
-import AuthContext from "./AuthContext";
+import { useDispatch } from "react-redux";
+import { authActions } from "../Store/AuthRedux";
 
 function AuthForm() {
+
+  const dispatch=useDispatch();
   const history = useHistory();
-  const authCtx = useContext(AuthContext);
   const [isLogin, setIsLogin] = useState(true);
   const [password, setPassword] = useState("");
   const [confirmPassword, setconfirmPassword] = useState("");
@@ -17,6 +19,7 @@ function AuthForm() {
   const switchAuthModelHandler = () => {
     setIsLogin((prevState) => !prevState);
   };
+
   function validateConfirmPassword(password, confirmPassword) {
     return password === confirmPassword;
   }
@@ -40,7 +43,6 @@ function AuthForm() {
           body: JSON.stringify({
             email: enteredEmail,
             password: enteredpassword,
-
             returnSecureToken: true,
           }),
           headers: {
@@ -84,8 +86,9 @@ function AuthForm() {
           }
         })
         .then((data) => {
-          console.log(data);
-          authCtx.login(data.idToken);
+          dispatch(authActions.login(data.idToken));
+          localStorage.setItem("token", data.idToken);
+          localStorage.setItem("email", data.email);
           history.replace("/ExpensePage");
         })
         .catch((err) => {
@@ -126,6 +129,7 @@ function AuthForm() {
                     onChange={handlePasswordchange}
                     value={password}
                     ref={passwordInputRef}
+                    autoComplete="password"
                     required
                   ></input>
                 </div>

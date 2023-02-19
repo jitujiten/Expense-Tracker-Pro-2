@@ -1,18 +1,18 @@
-import React,{useContext} from 'react'
-import { NavLink } from 'react-router-dom'
-import classes from './PageHeader.module.css'
-import { useEffect } from 'react'
-import AuthContext from "../Context/AuthContext";
+import React from "react";
+import { NavLink } from "react-router-dom";
+import classes from "./PageHeader.module.css";
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
 
 function PageHeader() {
-  const authCtx = useContext(AuthContext)
+  const idtoken = useSelector((state) => state.auth.token);
   useEffect(() => {
     fetch(
       "https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyD5Ls-KCDVH0n1SoRjuqDNCBEmY10N3zaY",
       {
         method: "POST",
         body: JSON.stringify({
-          idToken: authCtx.tokenid,
+          idToken: idtoken,
         }),
         headers: {
           "Content-Type": "application/json",
@@ -33,20 +33,30 @@ function PageHeader() {
         }
       })
       .then((data) => {
-        authCtx.ProfileDetails(data);
-        const get =JSON.stringify(data)
-        localStorage.setItem('data',get)
+        const get = JSON.stringify(data);
+        localStorage.setItem("data", get);
       })
       .catch((err) => {
         alert(err.message);
       });
-  }, [authCtx]);
+  }, []);
   return (
-     <React.Fragment  >
-      <header  className={classes.pageheader}> <div >Welcome to Expense Tracker !!!</div> <span>Your profile incomplete.<NavLink 
-       style={{textDecoration:'none'}} to="/ExpensePage:ProfilePage">Complete now</NavLink></span> </header>
-     </React.Fragment>
-  )
+    <React.Fragment>
+      <header className={classes.pageheader}>
+        {" "}
+        <div>Welcome to Expense Tracker !!!</div>{" "}
+        <span>
+          Your profile incomplete.
+          <NavLink
+            style={{ textDecoration: "none" }}
+            to="/ExpensePage:ProfilePage"
+          >
+            Complete now
+          </NavLink>
+        </span>{" "}
+      </header>
+    </React.Fragment>
+  );
 }
 
 export default PageHeader;

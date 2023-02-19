@@ -1,14 +1,18 @@
-import React, { useContext } from "react";
 import { useHistory } from "react-router-dom";
 import classes from "./ExpensePage.module.css";
-import AuthContext from "../Context/AuthContext";
+import { useDispatch,useSelector } from "react-redux";
+import { authActions } from "../Store/AuthRedux";
+
+
 
 function Logout() {
+  const  dispatch = useDispatch()
   const history = useHistory();
-  const authCtx = useContext(AuthContext);
+
+  useSelector((state)=>state.expenseitem.token)
   const logoutHandler = () => {
-    authCtx.logout();
   history.replace('/Authpage')
+  dispatch(authActions.logout(null))
   };
   return (
     <div>
